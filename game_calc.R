@@ -22,7 +22,19 @@ game_calc <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"),
     teams_str[1,3] <- teams_str[1,1] * adv * (teams_str[2,2]/leag_avr) 
     teams_str[2,3] <- teams_str[2,1] * (2-adv) * (teams_str[1,2]/leag_avr)
     
-    teams_str
+        ##To do Create function to find average goals after 80 minutes
+    eighty = 0.8236
+        
+    ##Create probability matrix
+    probm <- matrix(c(1:81), nrow=9, ncol=9)
     
+    for(h in 1:9){
+        for(a in 1:9){
+            l1 <- teams_str[1,3]*eighty
+            l2 <- teams_str[2,3]*eighty
+            probm[h,a] = dpois(h-1, l1)*dpois(a-1, l2)
+        }
+    }
+    probm
     
 }
