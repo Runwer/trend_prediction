@@ -1,6 +1,6 @@
 ##Calculate the expected probability of outcome in a game between team a and b. 
 ##Based on "history" number of games from given date
-game_calc <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"), history=38){
+game_rand <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"), history=38){
     
     ##First create dataframe
     teams_str <- as.data.frame(matrix(NA, nrow=2, ncol=3))
@@ -43,53 +43,26 @@ game_calc <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"),
     m3up =c(0.18, 1.7, 0.3)
     m4up =c(0.18, 1.4, 0.6)
     
-    
-            
-    ##Create probability matrix
-    prob80 <- matrix(c(1:81), nrow=9, ncol=9)
-    probfin <- matrix(c(1:81), nrow=9, ncol=9)
-
-
-
-    #function to calc probability matrix of first 80minutes
-    probmat <- function(lam1, lam2){
-        probm <- matrix(c(1:81), nrow=9, ncol=9)
-        for(h in 1:9){
-            for(a in 1:9){
-                probm[h,a] = dpois(h-1, lam1)*dpois(a-1, lam2)
-            }
-        }
-        probm
-    }
-    
     #Create lambda for first 80 min
     l1 <- teams_str[1,3]*eighty
     l2 <- teams_str[2,3]*eighty
     
-    prob80min<-probmat(l1,l2)
-    ## to verify model: print(sum(prob80min[1,1]+prob80min[2,2]+prob80min[3,3]))
-    
-    ## Scenario loop
-    ##0-0
-    prob00 <- probmat((teams_str[1,3]*m00[1]*m00[2]), (teams_str[2,3]*m00[1]))
-    probfin <- prob80min[1,1] * prob00
-    
-    ##Draw
-    
-    for(i in 2:9){
-        probD <- probmat((teams_str[1,3]*mD[1]*mD[2]), (teams_str[2,3]*mD[1]*mD[3]))
-        probtemp <- (prob80min[i,i] * probD)       
-        for(i)
-        
-        probfin <- proptemp[+ probfin
+    ##random 80 minut result
+    H = rpois(1, l1)
+    A = rpois(1, l2)
+
+    if(H==0 & H==0){
+        l1 = (teams_str[1,3]*m00[1]*m00[2])
+        l2 = (teams_str[2,3]*m00[1]*m00[3])
+        H = rpois(1, l1)+H
+        A = rpois(1, l2)+A
     }
     
-    for(i in 2:9){
-        probD <- probmat((teams_str[1,3]*m1up[1]*m1up[2]), (teams_str[2,3]*m1up[1]*m1up[3]))
-        probfin <- (prob80min[i,i-1] * probD)+probfin
+    if(H==0 & H!=0){
+        l1 = (teams_str[1,3]*mD[1]*mD[2])
+        l2 = (teams_str[2,3]*mD[1]*mD[3])
+        H = rpois(1, l1)+H
+        A = rpois(1, l2)+A
     }
-    
-    colnames(probfin) <- c(0:8)
-    rownames(probfin) <- c(0:8)
-    probfin
+    print(c(H,A))
 }
