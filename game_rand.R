@@ -3,9 +3,9 @@
 game_rand <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"), history=38, reps=100){
     
     ##Create final dataframe
-    probfin <- matrix(c(0), nrow=12, ncol=12)
-    colnames(probfin) <- c(0:11)
-    rownames(probfin) <- c(0:11)
+    probfin <- matrix(c(0), nrow=20, ncol=20)
+    colnames(probfin) <- c(0:19)
+    rownames(probfin) <- c(0:19)
     
 
     ##First create dataframe
@@ -29,6 +29,7 @@ game_rand <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"),
     ##than Team 2 or swap
     teams_str[1,3] <- teams_str[1,1] * adv * (teams_str[2,2]/leag_avr) 
     teams_str[2,3] <- teams_str[2,1] * (2-adv) * (teams_str[1,2]/leag_avr)
+    print(teams_str[,3])
     if(teams_str[2,3]>teams_str[1,3]){
         temp<-teams_str
         teams_str[1,1:3]<-temp[2,1:3]
@@ -106,6 +107,5 @@ game_rand <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"),
         probfin[H+1,A+1] <- probfin[H+1,A+1]+1
         
     }
-
-    print(probfin)
+    probfin = probfin/reps
 }
