@@ -25,17 +25,14 @@ game_rand <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"),
     ##To do Create function to calculate avr. of entire league
     leag_avr = 1.362 
     
+    teamswap = FALSE
     ##calculate balanced steam strength weighed against oppon. Secondly make sure Team 1 is stronger 
-    ##than Team 2 or swap
+    ##than Team 2 or give Away is favorite token
     teams_str[1,3] <- teams_str[1,1] * adv * (teams_str[2,2]/leag_avr) 
     teams_str[2,3] <- teams_str[2,1] * (2-adv) * (teams_str[1,2]/leag_avr)
     print(teams_str[,3])
-    if(teams_str[2,3]>teams_str[1,3]){
-        temp<-teams_str
-        teams_str[1,1:3]<-temp[2,1:3]
-        teams_str[2,1:3]<-temp[1,1:3]
-        rnam <- row.names(teams_str)
-        rownames(teams_str) <- c(rnam[2],rnam[1])
+    if(teams_str[2,3]>teams_str[1,3]*1.1){
+        teamswap = TRUE
     }
     
     ##To do Create function to find average goals after 80 minutes
@@ -60,50 +57,99 @@ game_rand <- function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"),
         
         H = rpois(1, l1)
         A = rpois(1, l2)
-
-        if(H==A & H==0){
-            l1 = (teams_str[1,3]*m00[1]*m00[2])
-            l2 = (teams_str[2,3]*m00[1]*m00[3])
-            H = rpois(1, l1)+H
-            A = rpois(1, l2)+A
-        }else if(H==A & H!=0){
-            l1 = (teams_str[1,3]*mD[1]*mD[2])
-            l2 = (teams_str[2,3]*mD[1]*mD[3])
-            H = rpois(1, l1)+H
-            A = rpois(1, l2)+A
-        }else if(H==A+1){
-            l1 = (teams_str[1,3]*m1up[1]*m1up[2])
-            l2 = (teams_str[2,3]*m1up[1]*m1up[3])
-            H = rpois(1, l1)+H
-            A = rpois(1, l2)+A
-        }else if(H==A+2){
-            l1 = (teams_str[1,3]*m2up[1]*m2up[2])
-            l2 = (teams_str[2,3]*m2up[1]*m2up[3])
-            H = rpois(1, l1)+H
-            A = rpois(1, l2)+A
-        }else if(H>A+2){
-            l1 = (teams_str[1,3]*m3up[1]*m3up[2])
-            l2 = (teams_str[2,3]*m3up[1]*m3up[3])
-            H = rpois(1, l1)+H
-            A = rpois(1, l2)+A
-        }else if(H==A-1){
-            l1 = (teams_str[1,3]*m1d[1]*m1d[2])
-            l2 = (teams_str[2,3]*m1d[1]*m1d[3])
-            H = rpois(1, l1)+H
-            A = rpois(1, l2)+A
-        }else if(H==A-2){
-            l1 = (teams_str[1,3]*m2d[1]*m2d[2])
-            l2 = (teams_str[2,3]*m2d[1]*m2d[3])
-            H = rpois(1, l1)+H
-            A = rpois(1, l2)+A
-        }else if(H<A-2){
-            l1 = (teams_str[1,3]*m3d[1]*m3d[2])
-            l2 = (teams_str[2,3]*m3d[1]*m3d[3])
-            H = rpois(1, l1)+H
-            A = rpois(1, l2)+A
+        
+        if(teamswap == FALSE){
+            if(H==A & H==0){
+                l1 = (teams_str[1,3]*m00[1]*m00[2])
+                l2 = (teams_str[2,3]*m00[1]*m00[3])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A & H!=0){
+                l1 = (teams_str[1,3]*mD[1]*mD[2])
+                l2 = (teams_str[2,3]*mD[1]*mD[3])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A+1){
+                l1 = (teams_str[1,3]*m1up[1]*m1up[2])
+                l2 = (teams_str[2,3]*m1up[1]*m1up[3])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A+2){
+                l1 = (teams_str[1,3]*m2up[1]*m2up[2])
+                l2 = (teams_str[2,3]*m2up[1]*m2up[3])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H>A+2){
+                l1 = (teams_str[1,3]*m3up[1]*m3up[2])
+                l2 = (teams_str[2,3]*m3up[1]*m3up[3])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A-1){
+                l1 = (teams_str[1,3]*m1d[1]*m1d[2])
+                l2 = (teams_str[2,3]*m1d[1]*m1d[3])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A-2){
+                l1 = (teams_str[1,3]*m2d[1]*m2d[2])
+                l2 = (teams_str[2,3]*m2d[1]*m2d[3])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H<A-2){
+                l1 = (teams_str[1,3]*m3d[1]*m3d[2])
+                l2 = (teams_str[2,3]*m3d[1]*m3d[3])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else{
+                print("error!!!!")
+            }
+        }else if(teamswap == TRUE){
+            if(H==A & H==0){
+                l1 = (teams_str[1,3]*m00[1]*m00[3])
+                l2 = (teams_str[2,3]*m00[1]*m00[2])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A & H!=0){
+                l1 = (teams_str[1,3]*mD[1]*mD[3])
+                l2 = (teams_str[2,3]*mD[1]*mD[2])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A+1){
+                l1 = (teams_str[1,3]*m1up[1]*m1up[3])
+                l2 = (teams_str[2,3]*m1up[1]*m1up[2])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A+2){
+                l1 = (teams_str[1,3]*m2up[1]*m2up[3])
+                l2 = (teams_str[2,3]*m2up[1]*m2up[2])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H>A+2){
+                l1 = (teams_str[1,3]*m3up[1]*m3up[3])
+                l2 = (teams_str[2,3]*m3up[1]*m3up[2])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A-1){
+                l1 = (teams_str[1,3]*m1d[1]*m1d[3])
+                l2 = (teams_str[2,3]*m1d[1]*m1d[2])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H==A-2){
+                l1 = (teams_str[1,3]*m2d[1]*m2d[3])
+                l2 = (teams_str[2,3]*m2d[1]*m2d[2])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else if(H<A-2){
+                l1 = (teams_str[1,3]*m3d[1]*m3d[3])
+                l2 = (teams_str[2,3]*m3d[1]*m3d[2])
+                H = rpois(1, l1)+H
+                A = rpois(1, l2)+A
+            }else{
+                print("error!!!! in game galc")
+            }
         }else{
-            print("error!!!!")
+            print("Error in team swap")
         }
+        
         probfin[H+1,A+1] <- probfin[H+1,A+1]+1
         
     }

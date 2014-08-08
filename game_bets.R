@@ -18,7 +18,7 @@ game_bets<-function(data, team_h, team_a, date=format(Sys.time(), "%Y-%m-%d"), h
                 A = A + out[i,u]
             }
             
-            if(i+u >4.5){
+            if(i+u <4.5){
                 Gl2_5 = Gl2_5 + out[i,u]    
             }else{
                 Gm2_5 = Gm2_5 + out[i,u]

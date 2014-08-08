@@ -1,4 +1,4 @@
-bettester <- function(data, start=101, reps=1000){
+bettester <- function(data, start=101, reps=100000){
     ##find length of test
     total_len <- nrow(data)
 
@@ -17,7 +17,7 @@ bettester <- function(data, start=101, reps=1000){
         
         print(play_sug)
         
-        #Kontroller samlet spi om der er gevinst
+        #Kontroller samlet spil om der er gevinst
         win[1,2] <- win[1,2] + Reduce("+", play_sug[[1]])
         win[2,2] <- win[2,2] + Reduce("+", play_sug[[2]])
 
@@ -39,8 +39,8 @@ bettester <- function(data, start=101, reps=1000){
             print("ERROR")
         }
         
-        win[1,1] <- win[1,1] + as.numeric(play_sug[[1]][result])
-        win[2,1] <- win[2,1] + as.numeric(play_sug[[2]][goals])
+        win[1,1] <- win[1,1] + as.numeric(play_sug[[1]][result])*odds_r[result]
+        win[2,1] <- win[2,1] + as.numeric(play_sug[[2]][goals])*odds_goals[goals]
         
         #Tilføj til win matrix
     }
